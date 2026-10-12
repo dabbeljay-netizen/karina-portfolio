@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Die Hochzeitsgeschichten von Karina, in zeitlosen Schwarz-Weiß-Bildern.">
+  <title>Galerie – Karina</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-family='serif' font-size='48' fill='%23fff'%3EK%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Pinyon+Script&family=Viaoda+Libre&display=swap" rel="stylesheet">
+  <script>if ("IntersectionObserver" in window) document.documentElement.classList.add("has-scroll-reveal");</script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --black: #000000;
+      --white: #FFFFFF;
+      --line: rgba(255, 255, 255, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 32px 6.1vw;
+    }
+
+    .wordmark {
+      font-family: "Viaoda Libre", serif;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 3.6vw, 54px);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    nav a { transition: opacity 180ms ease; }
+    nav a:hover { opacity: 0.65; }
+    nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; }
+
+    main { padding: clamp(38px, 6vw, 80px) 6.1vw 110px; }
+
+    .page-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 35px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      animation: arrive 700ms ease both;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Viaoda Libre", serif;
+      font-size: clamp(50px, 8vw, 92px);
+      font-weight: 400;
+      line-height: 0.95;
+    }
+
+    .page-heading p {
+      margin: 0 0 5px;
+      font-family: "Pinyon Script", cursive;
+      font-size: clamp(25px, 3vw, 36px);
+      font-style: italic;
+    }
+
+    .masonry {
+      columns: 3;
+      column-gap: 14px;
+    }
+
+    .photo-button {
+      display: block;
+      width: 100%;
+      margin: 0 0 14px;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+      background: var(--black);
+      color: var(--white);
+      cursor: zoom-in;
+      break-inside: avoid;
+      animation: arrive 700ms both;
+    }
+
+    .photo-button:nth-child(3n + 1) { animation-delay: 50ms; }
+    .photo-button:nth-child(3n + 2) { animation-delay: 110ms; }
+    .photo-button:nth-child(3n) { animation-delay: 170ms; }
+
+    .photo-button img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: grayscale(1);
+      transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 350ms ease;
+    }
+
+    .photo-button:hover img { transform: scale(1.025); opacity: 0.82; }
+    .photo-button:focus-visible, .lightbox button:focus-visible, .close-button:focus-visible { outline: 1px solid var(--white); outline-offset: 4px; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      max-height: none;
+      grid-template: "stage" 1fr / 1fr;
+      margin: 0;
+      padding: 24px;
+      overflow: hidden;
+      border: 0;
+      background: transparent;
+      color: var(--white);
+      opacity: 0;
+      transition: opacity 260ms ease, overlay 260ms ease allow-discrete, display 260ms ease allow-discrete;
+    }
+
+    .lightbox[open] { display: grid; opacity: 1; }
+
+    .lightbox::backdrop {
+      background: rgba(0, 0, 0, 0.96);
+      opacity: 0;
+      transition: opacity 260ms ease, overlay 260ms ease allow-discrete, display 260ms ease allow-discrete;
+    }
+
+    .lightbox[open]::backdrop { opacity: 1; }
+
+    @starting-style {
+      .lightbox[open], .lightbox[open]::backdrop { opacity: 0; }
+    }
+
+    .lightbox-stage {
+      position: relative;
+      display: grid;
+      grid-area: stage;
+      min-width: 0;
+      min-height: 0;
+      place-items: center;
+    }
+
+    .lightbox-image {
+      display: block;
+      max-width: min(100%, 1200px);
+      max-height: 100%;
+      object-fit: contain;
+      filter: grayscale(1);
+      opacity: 0;
+      transform: scale(0.98);
+      transition: opacity 260ms ease, transform 320ms ease;
+    }
+
+    .lightbox[open] .lightbox-image { opacity: 1; transform: scale(1); }
+
+    .lightbox button {
+      position: absolute;
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--black);
+      color: var(--white);
+      font: 400 26px/1 "DM Sans", sans-serif;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .lightbox button:hover { background: var(--white); color: var(--black); }
+
+    .close-button { top: 18px; right: 18px; z-index: 1; }
+    .previous-button { top: 50%; left: 20px; transform: translateY(-50%); }
+    .next-button { top: 50%; right: 20px; transform: translateY(-50%); }
+
+    .lightbox-count {
+      position: absolute;
+      right: 0;
+      bottom: 4px;
+      left: 0;
+      margin: 0;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-align: center;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 20;
+      display: grid;
+      width: 46px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--white);
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--black);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      pointer-events: none;
+      cursor: pointer;
+      transition: opacity 240ms ease, transform 240ms ease, background-color 180ms ease, color 180ms ease, visibility 240ms;
+    }
+
+    .back-to-top.is-visible { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+    .back-to-top:hover { background: var(--black); color: var(--white); transform: translateY(-3px); }
+    .back-to-top:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
+    .back-to-top svg { display: block; width: 19px; height: 19px; }
+
+    html.has-scroll-reveal .scroll-reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    html.has-scroll-reveal .scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 800px) {
+      .masonry { columns: 2; }
+    }
+
+    @media (max-width: 640px) {
+      .page-header { align-items: flex-start; flex-direction: column; gap: 24px; padding: 25px 22px; }
+      nav { width: 100%; justify-content: space-between; gap: 12px; font-size: 9px; letter-spacing: 0.08em; }
+      main { padding: 42px 22px 75px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+      .masonry { column-gap: 10px; }
+      .photo-button { margin-bottom: 10px; }
+      .lightbox { padding: 16px; }
+      .lightbox button { width: 42px; height: 42px; font-size: 23px; }
+      .close-button { top: 12px; right: 12px; }
+      .previous-button { left: 9px; }
+      .next-button { right: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a class="wordmark" href="index.html" aria-label="Karina, Startseite">Karina</a>
+    <nav aria-label="Hauptnavigation">
+      <a href="index.html">Startseite</a>
+      <a href="gallery.html" aria-current="page">Galerie</a>
+      <a href="about.html">Über mich</a>
+      <a href="contact.html">Kontakt</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <h1>Galerie</h1>
+      <p>Geschichten in Bildern</p>
+    </div>
+
+    <section class="masonry" aria-label="Hochzeitsfotografien">
+      <button class="photo-button" type="button" data-index="0" aria-label="Foto 1 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-01/1000/1250" alt="Hochzeitsmoment 1" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="1" aria-label="Foto 2 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-02/1000/760" alt="Hochzeitsmoment 2" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="2" aria-label="Foto 3 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-03/1000/1400" alt="Hochzeitsmoment 3" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="3" aria-label="Foto 4 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-04/1000/900" alt="Hochzeitsmoment 4" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="4" aria-label="Foto 5 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-05/1000/1320" alt="Hochzeitsmoment 5" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="5" aria-label="Foto 6 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-06/1000/820" alt="Hochzeitsmoment 6" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="6" aria-label="Foto 7 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-07/1000/1450" alt="Hochzeitsmoment 7" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="7" aria-label="Foto 8 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-08/1000/940" alt="Hochzeitsmoment 8" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="8" aria-label="Foto 9 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-09/1000/1220" alt="Hochzeitsmoment 9" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="9" aria-label="Foto 10 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-10/1000/780" alt="Hochzeitsmoment 10" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="10" aria-label="Foto 11 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-11/1000/1360" alt="Hochzeitsmoment 11" loading="lazy"></button>
+      <button class="photo-button" type="button" data-index="11" aria-label="Foto 12 vergrößern"><img src="https://picsum.photos/seed/karina-wedding-12/1000/880" alt="Hochzeitsmoment 12" loading="lazy"></button>
+    </section>
+  </main>
+
+  <dialog class="lightbox" aria-label="Fotoansicht">
+    <button class="close-button" type="button" aria-label="Lightbox schließen">×</button>
+    <div class="lightbox-stage">
+      <button class="previous-button" type="button" aria-label="Vorheriges Foto">‹</button>
+      <img class="lightbox-image" alt="">
+      <button class="next-button" type="button" aria-label="Nächstes Foto">›</button>
+      <p class="lightbox-count" aria-live="polite"></p>
+    </div>
+  </dialog>
+
+  <script>
+    const revealElements = document.querySelectorAll(".scroll-reveal");
+    if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -4% 0px" });
+      revealElements.forEach(element => revealObserver.observe(element));
+    } else {
+      revealElements.forEach(element => element.classList.add("is-visible"));
+    }
+
+    const photoButtons = [...document.querySelectorAll(".photo-button")];
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImage = document.querySelector(".lightbox-image");
+    const lightboxCount = document.querySelector(".lightbox-count");
+    const closeButton = document.querySelector(".close-button");
+    let activeIndex = 0;
+
+    function showPhoto(index) {
+      activeIndex = (index + photoButtons.length) % photoButtons.length;
+      const thumbnail = photoButtons[activeIndex].querySelector("img");
+      lightboxImage.src = thumbnail.src;
+      lightboxImage.alt = thumbnail.alt;
+      lightboxCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${photoButtons.length}`;
+    }
+
+    function openLightbox(index) {
+      showPhoto(index);
+      lightbox.showModal();
+      closeButton.focus();
+    }
+
+    photoButtons.forEach((button, index) => {
+      button.addEventListener("click", () => openLightbox(index));
+    });
+
+    closeButton.addEventListener("click", () => lightbox.close());
+    document.querySelector(".previous-button").addEventListener("click", () => showPhoto(activeIndex - 1));
+    document.querySelector(".next-button").addEventListener("click", () => showPhoto(activeIndex + 1));
+
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) lightbox.close();
+    });
+
+    lightbox.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        lightbox.close();
+        return;
+      }
+      if (event.key === "ArrowLeft") showPhoto(activeIndex - 1);
+      if (event.key === "ArrowRight") showPhoto(activeIndex + 1);
+    });
+  </script>
+  <button class="back-to-top" type="button" aria-label="Zum Seitenanfang" title="Zum Seitenanfang">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 19V5m-6 6 6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  </button>
+  <script>
+    const backToTopButton = document.querySelector(".back-to-top");
+    const updateBackToTopVisibility = () => backToTopButton.classList.toggle("is-visible", window.scrollY >= 400);
+    window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
+    updateBackToTopVisibility();
+    backToTopButton.addEventListener("click", () => {
+      const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+      window.scrollTo({ top: 0, behavior });
+    });
+  </script>
+</body>
+</html>

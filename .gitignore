@@ -1,0 +1,38 @@
+# Betriebssystem
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Claude Code (lokale Einstellungen)
+.claude/
+
+# Abhängigkeiten & Build-Ausgaben (falls später Tools genutzt werden)
+node_modules/
+dist/
+build/
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Umgebungsvariablen / Zugangsdaten
+.env
+.env.*
+
+# Original-Fotos in voller Auflösung (nur optimierte Bilder committen)
+originals/
+*.raw
+*.cr2
+*.cr3
+*.nef
+*.arw
+*.dng
+*.psd
